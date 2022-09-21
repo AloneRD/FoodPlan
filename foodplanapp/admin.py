@@ -5,7 +5,7 @@ from foodplanapp.models import Recipe, Allergy, RecipeType, Subscription
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ['recipe_type']
 
 
 @admin.register(Allergy)
