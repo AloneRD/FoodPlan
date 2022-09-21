@@ -1,16 +1,16 @@
-from django.contrib.auth import logout
-from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
-
-# Create your views here.
 from django.urls import reverse
 
 
 def login(request):
-    """Вход или создание регистрация нового пользователя."""
+    """Вход в аккаунт пользователя"""
     return render(request, 'auth.html')
+
+
+def register(request):
+    """Регистрация пользователя"""
+    return render(request, 'registration.html')
 
 
 def logout_view(request):
