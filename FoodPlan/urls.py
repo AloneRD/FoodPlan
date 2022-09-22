@@ -28,4 +28,5 @@ urlpatterns = [
     path('lk/', views.lk, name='lk'),
     path('logout_view/', views.logout_view, name='logout_view'),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('orders/', views.subscription, name="subscription")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
