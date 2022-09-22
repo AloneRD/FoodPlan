@@ -134,4 +134,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/'
 
-PHONENUMBER_DEFAULT_REGION = 'RU'
+AUTHENTICATION_BACKENDS = (
+    'foodplanapp.authentication.EmailBackend',
+)

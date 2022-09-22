@@ -21,6 +21,6 @@ from foodplanapp import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('admin/', admin.site.urls),
-    path('login/', views.login, name='login'),
+    path('login/', views.auth, name='login'),
     path('register/', views.register, name='register'),
 ]
