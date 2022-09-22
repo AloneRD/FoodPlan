@@ -2,17 +2,6 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 
-class RecipePeriod(models.Model):
-    name = models.CharField("Время приема", max_length=200, db_index=True)
-
-    class Meta:
-        verbose_name = "Время приема"
-        verbose_name_plural = "Время приемов"
-
-    def __str__(self):
-        return f"{self.name}"
-
-
 class Allergy(models.Model):
     name = models.CharField("Аллергия", max_length=200, db_index=True)
 
@@ -42,17 +31,14 @@ class Recipe(models.Model):
         blank=True,
         null=True
     )
+    cooking_steps = ingredients = models.TextField("Шаги приготовления", max_length=600)
     calories = models.PositiveIntegerField("Кол-во калорий", validators=[MinValueValidator(0)])
     image_file = models.ImageField("Изображение")
     recipe_type = models.ForeignKey(
         RecipeType, on_delete=models.CASCADE, verbose_name="Тип рецепта", related_name="recipe"
     )
-    allergy = models.ForeignKey(
-        Allergy, on_delete=models.CASCADE, verbose_name="Аллергия", related_name="recipe"
-    )
-    period = models.ForeignKey(
-        RecipePeriod, on_delete=models.CASCADE, verbose_name="Время приема", related_name="recipe"
-    )
+    ingredients = models.TextField("Ингридиенты", max_length=300)
+    new_year_flag = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Рецепт"

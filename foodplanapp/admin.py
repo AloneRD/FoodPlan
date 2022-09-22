@@ -1,16 +1,11 @@
 from django.contrib import admin
 
-from foodplanapp.models import Recipe, RecipePeriod, Allergy, RecipeType, Subscription
+from foodplanapp.models import Recipe, Allergy, RecipeType, Subscription
 
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(RecipePeriod)
-class RecipePeriodAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ['recipe_type']
 
 
 @admin.register(Allergy)
