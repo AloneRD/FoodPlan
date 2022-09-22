@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -50,6 +51,15 @@ class Recipe(models.Model):
 
 class Subscription(models.Model):
     name = models.CharField("Название подписки", max_length=200, db_index=True)
+    day_calories = models.PositiveIntegerField("Кол-во калорий в день", validators=[MinValueValidator(0)])
+    allergy = models.ForeignKey(
+        Allergy,
+        on_delete=models.CASCADE,
+        verbose_name="Аллергия",
+        related_name="subscription",
+        default=Allergy.objects.first()
+    )
+    portions = models.PositiveIntegerField("Кол-во приемов пищи в день", validators=[MinValueValidator(0)])
     price = models.PositiveIntegerField("Цена подписки", validators=[MinValueValidator(0)])
 
     class Meta:
@@ -58,3 +68,21 @@ class Subscription(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class Order(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="Пользователь", related_name="user"
+    )
+    subscription = models.ForeignKey(
+        Subscription, on_delete=models.CASCADE, verbose_name="подписка", related_name="order"
+    )
+    start_date = models.DateField("Дата начала подписки", db_index=True)
+    end_date = models.DateField("Дата окончания подписки", db_index=True)
+
+    class Meta:
+        verbose_name = "Заказ"
+        verbose_name_plural = "Заказы"
+
+    def __str__(self):
+        return f"{self.user.username} - {self.subscription.name} rub"

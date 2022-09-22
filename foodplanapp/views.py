@@ -1,10 +1,31 @@
-from django.contrib.auth import login
+from pprint import pprint
+
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from foodplanapp.forms import UserLoginForm, UserRegisterForm
+from foodplanapp.models import Order
+
+
+@login_required
+def lk(request):
+    """Личный кабинет пользователя"""
+    orders = Order.objects.filter(user=request.user).select_related('subscription__allergy')
+    client_subscriptions = {}
+    for order in orders:
+        client_subscriptions[order] = {
+            'subscription_name': order.subscription.name,
+            'allergy': order.subscription.allergy.name,
+            'user_day_menu': 'меню на день',  # написать функцию генерации меню на день
+            'day_calories': order.subscription.day_calories,
+            'portions': order.subscription.portions,
+        }
+    pprint(client_subscriptions)
+    return render(request, 'lk.html', {'orders': client_subscriptions})
 
 
 def authenticate_user(email, password):
@@ -27,7 +48,7 @@ def auth(request):
             if user:
                 if user.is_active:
                     login(request, user)
-                    return redirect('index')
+                    return redirect('lk')
                 else:
                     return HttpResponse('Disabled account')
             else:
@@ -51,6 +72,7 @@ def register(request):
 
 def logout_view(request):
     """Выход пользователя."""
+    logout(request)
     return HttpResponseRedirect(reverse("index"))
 
 

@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf.urls.static import static
 
 from foodplanapp import views
@@ -23,6 +23,9 @@ from . import settings
 urlpatterns = [
     path('', views.index, name='index'),
     path('admin/', admin.site.urls),
-    path('login/', views.auth, name='login'),
+    path('user_login/', views.auth, name='user_login'),
     path('register/', views.register, name='register'),
+    path('lk/', views.lk, name='lk'),
+    path('logout_view/', views.logout_view, name='logout_view'),
+    path('accounts/', include('django.contrib.auth.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
