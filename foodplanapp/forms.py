@@ -28,3 +28,27 @@ class UserUpdateForm(forms.ModelForm):
 class UserLoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class OrderForm(forms.Form):
+    limit = forms.ChoiceField(
+        choices=[(3, 3), (12, 12)]
+            )
+    breakfast = forms.ChoiceField(
+        choices=[(0, 0), (1, 1)]
+    )
+    lunch = forms.ChoiceField(
+        choices=[(0, 0), (1, 1)]
+    )
+    dinner = forms.ChoiceField(
+        choices=[(0, 0), (1, 1)]
+    )
+    desserts = forms.ChoiceField(
+        choices=[(0, 0), (1, 1)]
+    )
+    new_year = forms.ChoiceField(
+        choices=[(0, 0), (1, 1)]
+    )
+    persons = forms.ChoiceField(
+        choices=[(1, 1), (2, 2), (3, 3)]
+    )

@@ -6,7 +6,8 @@ from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.urls import reverse
 
-from foodplanapp.forms import UserLoginForm, UserRegisterForm, UserUpdateForm
+from foodplanapp.forms import UserLoginForm, UserRegisterForm, UserUpdateForm, OrderForm
+
 from foodplanapp.models import Order
 
 
@@ -40,6 +41,17 @@ def lk(request):
             'form': form,
         },
     )
+
+
+@login_required
+def subscription(request):
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        print(form)
+        if form.is_valid():
+            cd = form.cleaned_data
+            print(f"dfgddf {cd}")
+    return render(request, 'order.html')
 
 
 def authenticate_user(email, password):
