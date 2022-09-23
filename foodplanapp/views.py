@@ -1,5 +1,3 @@
-from pprint import pprint
-
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -24,7 +22,6 @@ def lk(request):
             'day_calories': order.subscription.day_calories,
             'portions': order.subscription.portions,
         }
-    pprint(client_subscriptions)
     return render(request, 'lk.html', {'orders': client_subscriptions})
 
 
