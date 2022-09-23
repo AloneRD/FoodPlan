@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from foodplanapp.models import Recipe, Allergy, RecipeType, Subscription, Order
+from foodplanapp.models import Recipe, Allergy, RecipeType, Order, Rate
 
 
 @admin.register(Recipe)
@@ -18,11 +18,11 @@ class RecipeTypeAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Subscription)
+@admin.register(Order)
 class SubscriptionAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
+@admin.register(Rate)
+class RateAdmin(admin.ModelAdmin):
     pass
