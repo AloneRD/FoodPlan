@@ -3,15 +3,25 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
+from django.template import RequestContext
 from django.urls import reverse
 
-from foodplanapp.forms import UserLoginForm, UserRegisterForm
+from foodplanapp.forms import UserLoginForm, UserRegisterForm, UserUpdateForm
 from foodplanapp.models import Order
 
 
 @login_required
 def lk(request):
     """Личный кабинет пользователя"""
+    if request.method == "POST":
+        form = UserUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            return redirect('lk')
+    else:
+        form = UserUpdateForm(instance=request.user)
+
     orders = Order.objects.filter(user=request.user).select_related('subscription__allergy')
     client_subscriptions = {}
     for order in orders:
@@ -22,7 +32,14 @@ def lk(request):
             'day_calories': order.subscription.day_calories,
             'portions': order.subscription.portions,
         }
-    return render(request, 'lk.html', {'orders': client_subscriptions})
+    return render(
+        request,
+        'lk.html',
+        {
+            'orders': client_subscriptions,
+            'form': form,
+        },
+    )
 
 
 def authenticate_user(email, password):
