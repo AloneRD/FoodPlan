@@ -1,8 +1,10 @@
+from dataclasses import fields
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from .models import Allergy
 
 
 class UserRegisterForm(UserCreationForm):
@@ -52,3 +54,7 @@ class OrderForm(forms.Form):
     persons = forms.ChoiceField(
         choices=[(1, 1), (2, 2), (3, 3)]
     )
+    allergy = forms.ModelMultipleChoiceField(
+        queryset=Allergy.objects.all(),
+        widget=forms.CheckboxSelectMultiple(),
+        )

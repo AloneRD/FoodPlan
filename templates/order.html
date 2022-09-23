@@ -111,25 +111,13 @@
                         </tr>
                         <tr>
                             <th scope="row" class="text-start">Аллергии</th>
-                            <td>
-                                <div class="form-check d-flex justify-content-start">
-                                    <input class="form-check-input me-1" type="checkbox" value="" name="allergy1">
-                                    <label class="form-check-label" for="allergy1">
-                                        Аллергия 1
-                                    </label>
-                                </div>
-                                <div class="form-check d-flex justify-content-start">
-                                    <input class="form-check-input me-1" type="checkbox" value="" name="allergy2">
-                                    <label class="form-check-label" for="allergy2">
-                                        Аллергия 2
-                                    </label>
-                                </div>
-                                <div class="form-check d-flex justify-content-start">
-                                    <input class="form-check-input me-1" type="checkbox" value="" name="allergy3">
-                                    <label class="form-check-label" for="allergy3">
-                                        Аллергия 3
-                                    </label>
-                                </div>
+                            <td >
+                                {% for allergy in form.allergy %}
+                                    <div class="form-check d-flex justify-content-start">
+                                        <input class="form-check-input me-1" type="checkbox" name="{{ allergy.name }}" value="">
+                                        <label class="form-check-label" for="{{ allergy.id_for_label }}">{{ allergy.choice_label }}</label>
+                                    </div>
+                                {% endfor %}
                             </td>
                         </tr>
                     </tbody>
