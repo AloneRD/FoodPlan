@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+{% load static %}
 <html lang="en">
 
 <head>
@@ -14,11 +15,9 @@
     <header>
         <nav class="navbar navbar-expand-md navbar-light fixed-top navbar__opacity">
             <div class="container">
-                <a class="navbar-brand" href="#">
-                    <img src="img/logo.8d8f24edbb5f.svg" height="55" width="189" alt="">
+                <a class="navbar-brand" href="{% url 'index' %}">
+                    <img src="{% static 'img/logo.8d8f24edbb5f.svg' %}" height="55" width="189" alt="">
                 </a>
-                <h3 class="text-secondary mt-2 me-2">Стоимость: 00000₽</h3>
-                <button type="submit" id="btnContinue" class="btn btn-sm btn-outline-success foodplan_green foodplan__border_green">Оплатить</button>
             </div>
         </nav>
     </header>
@@ -29,83 +28,84 @@
                 <h5 class="text-secondary mb-3">Вам будет доступно 4 типа меню: Классическое, Низкоуглеводное, Вегетарианское и Кето.</h5>
                 <div class="row mb-5">
                     <div class="col-6 col-md-3">
-                        <img src="img/menu_classical.png" alt="" class="w-100">
+                        <img src="{% static 'img/menu_classical.png' %}" alt="" class="w-100">
                     </div>
                     <div class="col-6 col-md-3">
-                        <img src="img/menu_nizkougl.png" alt="" class="w-100">
+                        <img src="{% static 'img/menu_nizkougl.png' %}" alt="" class="w-100">
                     </div>
                     <div class="col-6 col-md-3">
-                        <img src="img/menu_veg.png" alt="" class="w-100">
+                        <img src="{% static 'img/menu_veg.png' %}" alt="" class="w-100">
                     </div>
                     <div class="col-6 col-md-3">
-                        <img src="img/menu_keto.png" alt="" class="w-100">
+                        <img src="{% static 'img/menu_keto.png' %}" alt="" class="w-100">
                     </div>
                 </div>
                 <h2><strong>Выберите подходящий тариф</strong></h2>
-                <form>
+                <form method="POST">
+                {% csrf_token %}
                 <table class="table text-center text-truncate mb-5">
                     <tbody>
                         <tr>
                             <th scope="row" class="text-start">Срок</th>
                             <td>
-                                <select class="form-select">
-                                    <option value="0" selected>3 мес.</option>
-                                    <option value="2">12 мес.</option>
+                                <select name = 'limit' class="form-select">
+                                    <option value="3" selected>3 мес.</option>
+                                    <option value="12">12 мес.</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row" class="text-start">Завтраки</th>
                             <td>
-                                <select name="select1" class="form-select">
-                                    <option value="0" selected>&#10004;</option>
-                                    <option value="1">&#10008;</option>
+                                <select name="breakfast" class="form-select">
+                                    <option value="1" selected>&#10004;</option>
+                                    <option value="0">&#10008;</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row" class="text-start">Обеды</th>
                             <td>
-                                <select name="select2" class="form-select">
-                                    <option value="0" selected>&#10004;</option>
-                                    <option value="1">&#10008;</option>
+                                <select name="lunch" class="form-select">
+                                    <option value="1" selected>&#10004;</option>
+                                    <option value="0">&#10008;</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row" class="text-start">Ужины</th>
                             <td>
-                                <select name="select3" class="form-select">
-                                    <option value="0" selected>&#10004;</option>
-                                    <option value="1">&#10008;</option>
+                                <select name="dinner" class="form-select">
+                                    <option value="1" selected>&#10004;</option>
+                                    <option value="0">&#10008;</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row" class="text-start">Десерты</th>
                             <td>
-                                <select name="select4" class="form-select">
-                                    <option value="0" selected>&#10004;</option>
-                                    <option value="1">&#10008;</option>
+                                <select name="desserts" class="form-select">
+                                    <option value="1" selected>&#10004;</option>
+                                    <option value="0">&#10008;</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row" class="text-start">Новогоднее меню 🎁</th>
                             <td>
-                                <select name="select5" class="form-select">
-                                    <option value="0" selected>&#10004;</option>
-                                    <option value="1">&#10008;</option>
+                                <select name="new_year" class="form-select">
+                                    <option value="1" selected>&#10004;</option>
+                                    <option value="0">&#10008;</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row" class="text-start">Кол-во персон</th>
                             <td>
-                                <select name="select6" class="form-select">
-                                    <option value="0" selected>1</option>
-                                    <option value="1">2</option>
-                                    <option value="2">3</option>
+                                <select name="persons" class="form-select">
+                                    <option value="1" selected>1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
                                 </select>
                             </td>
                         </tr>

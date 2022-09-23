@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from foodplanapp.forms import UserLoginForm, UserRegisterForm
+from foodplanapp.forms import UserLoginForm, UserRegisterForm, OrderForm
 from foodplanapp.models import Order
 
 
@@ -26,6 +26,17 @@ def lk(request):
         }
     pprint(client_subscriptions)
     return render(request, 'lk.html', {'orders': client_subscriptions})
+
+
+@login_required
+def subscription(request):
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        print(form)
+        if form.is_valid():
+            cd = form.cleaned_data
+            print(f"dfgddf {cd}")
+    return render(request, 'order.html')
 
 
 def authenticate_user(email, password):
