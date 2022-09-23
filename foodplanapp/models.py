@@ -49,17 +49,30 @@ class Recipe(models.Model):
         return f"{self.name}"
 
 
-class Subscription(models.Model):
-    name = models.CharField("Название подписки", max_length=200, db_index=True)
-    day_calories = models.PositiveIntegerField("Кол-во калорий в день", validators=[MinValueValidator(0)])
-    allergy = models.ForeignKey(
-        Allergy,
+class Order(models.Model):
+    user = models.ForeignKey(
+        User,
         on_delete=models.CASCADE,
-        verbose_name="Аллергия",
-        related_name="subscription",
-        default=Allergy.objects.first()
+        verbose_name="Пользователь",
+        related_name="subscription"
     )
-    portions = models.PositiveIntegerField("Кол-во приемов пищи в день", validators=[MinValueValidator(0)])
+    start_date = models.DateField("Дата начала", auto_now_add=True, db_index=True)
+    end_date = models.DateField("Дата окончания", db_index=True)
+    breakfast = models.BooleanField("Завтрак", default=False)
+    lunch = models.BooleanField("Обед", default=False)
+    dinner = models.BooleanField("Ужин", default=False)
+    desserts = models.BooleanField("Десерт", default=False)
+    new_year = models.BooleanField("Новогоднее меню", default=False)
+    persons = models.PositiveIntegerField(
+        "Кол-во персон",
+        default=1,
+        validators=[MinValueValidator(0)]
+    )
+    allergy = models.ManyToManyField(
+        Allergy,
+        verbose_name="Аллергия",
+        related_name="subscription"
+    )
     price = models.PositiveIntegerField("Цена подписки", validators=[MinValueValidator(0)])
 
     class Meta:
@@ -67,22 +80,31 @@ class Subscription(models.Model):
         verbose_name_plural = "Подписки"
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.id} Дата окончания - {self.end_date}"
 
 
-class Order(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name="Пользователь", related_name="user"
+class Rate(models.Model):
+    recipe_type = recipe_type = models.ForeignKey(
+        RecipeType,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        verbose_name="Тип рецепта",
+        related_name="rate"
     )
-    subscription = models.ForeignKey(
-        Subscription, on_delete=models.CASCADE, verbose_name="подписка", related_name="order"
+    allergy = models.ForeignKey(
+        Allergy,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        verbose_name="Аллергия",
+        related_name="rate"
     )
-    start_date = models.DateField("Дата начала подписки", db_index=True)
-    end_date = models.DateField("Дата окончания подписки", db_index=True)
+    price = models.FloatField(default=0.0, verbose_name="Стоимость")
 
     class Meta:
-        verbose_name = "Заказ"
-        verbose_name_plural = "Заказы"
+        verbose_name = "Тариф"
+        verbose_name_plural = "Тарифы"
 
     def __str__(self):
-        return f"{self.user.username} - {self.subscription.name} rub"
+        return f"{self.recipe_type}{self.allergy} - {self.price}"
