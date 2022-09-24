@@ -56,5 +56,6 @@ class OrderForm(forms.Form):
     )
     allergy = forms.ModelMultipleChoiceField(
         queryset=Allergy.objects.all(),
-        widget=forms.CheckboxSelectMultiple(),
+        widget=forms.CheckboxSelectMultiple(attrs={'class':"form-check-input me-1"}),
+        required=False
         )

@@ -111,11 +111,10 @@
                         </tr>
                         <tr>
                             <th scope="row" class="text-start">Аллергии</th>
-                            <td >
+                            <td>
                                 {% for allergy in form.allergy %}
                                     <div class="form-check d-flex justify-content-start">
-                                        <input class="form-check-input me-1" type="checkbox" name="{{ allergy.name }}" value="">
-                                        <label class="form-check-label" for="{{ allergy.id_for_label }}">{{ allergy.choice_label }}</label>
+                                        {{allergy}}
                                     </div>
                                 {% endfor %}
                             </td>
