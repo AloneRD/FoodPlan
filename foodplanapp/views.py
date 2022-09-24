@@ -3,12 +3,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
-from django.template import RequestContext
+from django.db.models import Q, Sum
 from django.urls import reverse
-
-from foodplanapp.forms import UserLoginForm, UserRegisterForm, UserUpdateForm, OrderForm
-
-from foodplanapp.models import Order
+from foodplanapp.forms import UserLoginForm,\
+    UserRegisterForm,\
+    UserUpdateForm,\
+    OrderForm
+from foodplanapp.models import Order, Rate, RecipeType
+import datetime
 
 
 @login_required
@@ -47,11 +49,55 @@ def lk(request):
 def subscription(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
-        print(form)
         if form.is_valid():
             cd = form.cleaned_data
-            print(f"dfgddf {cd}")
-    return render(request, 'order.html')
+            user = request.user
+            limit,\
+            breakfast,\
+            lunch,\
+            dinner,\
+            desserts,\
+            new_year,\
+            person,\
+            allergy = cd.values()
+            end_date = datetime.datetime.now().date()\
+                + datetime.timedelta(days=int(limit)*30)
+            price = calculate_order_cost(cd)
+            order = Order.objects.create(
+                user=user,
+                end_date=end_date,
+                breakfast=bool(breakfast),
+                lunch=bool(lunch),
+                dinner=bool(dinner),
+                desserts=bool(desserts),
+                new_year=bool(new_year),
+                persons=int(person),
+                price=price,
+            )
+            order.allergy.set(allergy)
+
+    else:
+        form = OrderForm()
+    return render(request, 'order.html', {'form': form})
+
+
+def calculate_order_cost(order):
+    meals = []
+    for type_tariff, presence in order.items():
+        if type_tariff == "breakfast" and bool(int(presence)):
+            meals.append("Завтрак")
+        elif type_tariff == "lunch" and bool(int(presence)):
+            meals.append("Обед")
+        elif type_tariff == "dinner" and bool(int(presence)):
+            meals.append("Ужин")
+        elif type_tariff == "desserts" and bool(int(presence)):
+            meals.append("Десерт")
+    tariff_sum = Rate.objects.filter(
+        Q(recipe_type__in=RecipeType.objects.filter(name__in=meals)) |
+        Q(allergy__in=order['allergy'])
+        ).aggregate(Sum('price'))
+    total_cost = tariff_sum['price__sum'] * int(order['limit']) * int(order['persons'])
+    return float(total_cost)
 
 
 def authenticate_user(email, password):
