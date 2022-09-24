@@ -71,7 +71,9 @@ class Order(models.Model):
     allergy = models.ManyToManyField(
         Allergy,
         verbose_name="Аллергия",
-        related_name="subscription"
+        related_name="subscription",
+        null=True,
+        blank=True
     )
     price = models.PositiveIntegerField("Цена подписки", validators=[MinValueValidator(0)])
 
