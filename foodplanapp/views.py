@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -9,7 +11,7 @@ from foodplanapp.forms import UserLoginForm,\
     UserRegisterForm,\
     UserUpdateForm,\
     OrderForm
-from foodplanapp.models import Order, Rate, RecipeType
+from foodplanapp.models import Order, Rate, RecipeType, Recipe
 import datetime
 
 
@@ -30,6 +32,44 @@ def get_portions(order):
     return portions
 
 
+def get_recipe(recipe_type, allergy=None):
+    recipes = Recipe.objects.filter(recipe_type__name=recipe_type)
+    with_allergy_recipes = []
+    for recipe in recipes:
+        if allergy:
+            if allergy.name.lower() not in recipe.ingredients.lower().split():
+                with_allergy_recipes.append(recipe)
+    if allergy:
+        recipe = random.choice(with_allergy_recipes)
+    else:
+        recipe = random.choice(recipes)
+
+    return recipe
+
+
+def get_day_menu(order, allergy=None):
+    day_menu = {}
+    day_calories = 0
+    if order.breakfast:
+        breakfast = get_recipe('Завтрак', allergy)
+        day_menu['breakfast'] = breakfast
+        day_calories += breakfast.calories
+    if order.lunch:
+        lunch = get_recipe('Обед', allergy)
+        day_menu['lunch'] = lunch
+        day_calories += lunch.calories
+    if order.dinner:
+        dinner = get_recipe('Ужин', allergy)
+        day_menu['dinner'] = dinner
+        day_calories += lunch.calories
+    if order.desserts:
+        desserts = get_recipe('Десерт', allergy)
+        day_menu['desserts'] = desserts
+        day_calories += lunch.calories
+
+    return day_menu, day_calories
+
+
 @login_required
 def lk(request):
     """Личный кабинет пользователя"""
@@ -45,13 +85,20 @@ def lk(request):
     orders = Order.objects.filter(user=request.user).select_related('user')
     client_subscriptions = {}
     for order in orders:
-        client_subscriptions[order] = {
-            'subscription_name': 'Пользовательская',
-            'allergy': order.allergy,
-            'user_day_menu': 'меню на день',  # написать функцию генерации меню на день
-            'day_calories': 'калорий в день',  # написать функцию подсчета калорий в день
-            'portions': get_portions(order),
-        }
+        if order.allergy:
+            day_menu, day_calories = get_day_menu(order, order.allergy)
+            client_subscriptions[order] = {
+                'subscription_name': 'Пользовательская',
+                'allergy': order.allergy,
+                'user_day_menu': day_menu,
+                'day_calories': day_calories,
+                'portions': get_portions(order),
+            }
+        else:
+            client_subscriptions[order] = {
+                'allergy': 'Нет',
+            }
+
     return render(
         request,
         'lk.html',
