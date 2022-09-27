@@ -97,14 +97,51 @@
                                                     <h2>{{subscription.subscription_name}}</h2>
                                                 </div>
                                                 <div class="col-md-12 col-lg-9">
-                                                    <h6>{{subscription.user_day_menu}}</h6>
+                                                    <ul>
+                                                        {% if subscription.user_day_menu.breakfast %}
+                                                        <li>
+                                                            <h5>Завтрак:</h5>
+                                                            <p>{{subscription.user_day_menu.breakfast}}</p>
+                                                            <img src="{{subscription.user_day_menu.breakfast.image_file.url}}" style="width: 100%" alt="Фото {{subscription.user_day_menu.breakfast}}">
+                                                            <p>{{subscription.user_day_menu.breakfast.description}}</p>
+                                                            <p>{{subscription.user_day_menu.breakfast.cooking_steps}}</p>
+                                                        </li>
+                                                        {% endif %}
+                                                        {% if subscription.user_day_menu.lunch %}
+                                                        <li>
+                                                            <h5>Обед:</h5>
+                                                            <p>{{subscription.user_day_menu.lunch}}</p>
+                                                            <img src="{{subscription.user_day_menu.lunch.image_file.url}}" style="width: 100%" alt="Фото {{subscription.user_day_menu.lunch}}">
+                                                            <p>{{subscription.user_day_menu.lunch.description}}</p>
+                                                            <p>{{subscription.user_day_menu.lunch.cooking_steps}}</p>
+                                                        </li>
+                                                        {% endif %}
+                                                        {% if subscription.user_day_menu.dinner %}
+                                                        <li>
+                                                            <h5>Ужин:</h5>
+                                                            <p>{{subscription.user_day_menu.dinner}}</p>
+                                                            <img src="{{subscription.user_day_menu.dinner.image_file.url}}" style="width: 100%" alt="Фото {{subscription.user_day_menu.dinner}">
+                                                            <p>{{subscription.user_day_menu.dinner.description}}</p>
+                                                            <p>{{subscription.user_day_menu.dinner.cooking_steps}}</p>
+                                                        </li>
+                                                        {% endif %}
+                                                        {% if subscription.user_day_menu.desserts %}
+                                                        <li>
+                                                            <h5>Десерт:</h5>
+                                                            <p>{{subscription.user_day_menu.desserts}}</p>
+                                                            <img src="{{subscription.user_day_menu.desserts.image_file.url}}" style="width: 100%" alt="Фото {{subscription.user_day_menu.desserts}">
+                                                            <p>{{subscription.user_day_menu.desserts.description}}</p>
+                                                            <p>{{subscription.user_day_menu.desserts.cooking_steps}}</p>
+                                                        </li>
+                                                        {% endif %}
+                                                    </ul>
                                                 </div>
                                                 <div class="col-md-12 col-lg-3 text-muted d-flex flex-column justify-content-between">
                                                     <div class="d-flex flex-row justify-content-between">
                                                         <small>Персоны: </small><small>1</small>
                                                     </div>
                                                     <div class="d-flex flex-row justify-content-between">
-                                                        <small>Аллергии: </small><small>{{subscription.allergy}}</small>
+                                                        <small>Аллергии: </small><small>{{subscription.allergy | default_if_none:"Нет"}}</small>
                                                     </div>
                                                     <div class="d-flex flex-row justify-content-between">
                                                         <small>Калории: </small><small>{{subscription.day_calories}}</small>
