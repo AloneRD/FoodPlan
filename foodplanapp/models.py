@@ -68,8 +68,9 @@ class Order(models.Model):
         default=1,
         validators=[MinValueValidator(0)]
     )
-    allergy = models.ManyToManyField(
+    allergy = models.ForeignKey(
         Allergy,
+        on_delete=models.CASCADE,
         verbose_name="Аллергия",
         related_name="subscription",
         null=True,

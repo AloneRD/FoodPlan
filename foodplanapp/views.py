@@ -13,6 +13,23 @@ from foodplanapp.models import Order, Rate, RecipeType
 import datetime
 
 
+def get_portions(order):
+    portions = 0
+    if order.breakfast:
+        portions += 1
+
+    if order.lunch:
+        portions += 1
+
+    if order.dinner:
+        portions += 1
+
+    if order.desserts:
+        portions += 1
+
+    return portions
+
+
 @login_required
 def lk(request):
     """Личный кабинет пользователя"""
@@ -25,15 +42,15 @@ def lk(request):
     else:
         form = UserUpdateForm(instance=request.user)
 
-    orders = Order.objects.filter(user=request.user).select_related('subscription__allergy')
+    orders = Order.objects.filter(user=request.user).select_related('user')
     client_subscriptions = {}
     for order in orders:
         client_subscriptions[order] = {
-            'subscription_name': order.subscription.name,
-            'allergy': order.subscription.allergy.name,
+            'subscription_name': 'Пользовательская',
+            'allergy': order.allergy,
             'user_day_menu': 'меню на день',  # написать функцию генерации меню на день
-            'day_calories': order.subscription.day_calories,
-            'portions': order.subscription.portions,
+            'day_calories': 'калорий в день',  # написать функцию подсчета калорий в день
+            'portions': get_portions(order),
         }
     return render(
         request,

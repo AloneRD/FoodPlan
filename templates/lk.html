@@ -104,7 +104,7 @@
                                                         <small>Персоны: </small><small>1</small>
                                                     </div>
                                                     <div class="d-flex flex-row justify-content-between">
-                                                        <small>Аллергии: </small><small>{{subscription.allergy}}</small>
+                                                        <small>Аллергии: </small><small>{{subscription.allergy | default_if_none:"Нет"}}</small>
                                                     </div>
                                                     <div class="d-flex flex-row justify-content-between">
                                                         <small>Калории: </small><small>{{subscription.day_calories}}</small>
