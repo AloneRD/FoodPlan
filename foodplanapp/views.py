@@ -2,13 +2,14 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q, Sum
 from django.urls import reverse
 from foodplanapp.forms import UserLoginForm,\
     UserRegisterForm,\
     UserUpdateForm,\
-    OrderForm
+    OrderForm,\
+    PayForm
 from foodplanapp.models import Order, Rate, RecipeType
 import datetime
 
@@ -75,6 +76,7 @@ def subscription(request):
                 price=price,
             )
             order.allergy.set(allergy)
+            return redirect('pay', order_id=order.id)
 
     else:
         form = OrderForm()
@@ -98,6 +100,22 @@ def calculate_order_cost(order):
         ).aggregate(Sum('price'))
     total_cost = tariff_sum['price__sum'] * int(order['limit']) * int(order['persons'])
     return float(total_cost)
+
+
+@login_required
+def pay(request, order_id=1):
+    '''Оплата подписки'''
+    order = get_object_or_404(Order, pk=order_id)
+    if request.method == "POST":
+        form = PayForm(request.POST)
+        print(form)
+        if form.is_valid():
+            cd = form.cleaned_data
+            # Тут должна быть интеграция с платежной системой.
+            return redirect('lk')
+    else:
+        form = PayForm()
+    return render(request, 'pay_with_robokassa.html', {"order":order})
 
 
 def authenticate_user(email, password):

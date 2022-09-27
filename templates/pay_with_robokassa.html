@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Checkout Form</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <form class="checkout" method="POST">
+    {% csrf_token %}
+    <div class="checkout-header">
+      <span class="checkout-price">{{order.price}} руб.</span>
+    </div>
+    <p>
+      <input name = "name" type="text" class="checkout-input checkout-name" placeholder="Your name" autofocus>
+      <input name = "month" type="text" class="checkout-input checkout-exp" placeholder="MM">
+      <input name = "year" type="text" class="checkout-input checkout-exp" placeholder="YY">
+    </p>
+    <p>
+      <input name = "cart_number" type="text" class="checkout-input checkout-card" placeholder="4111 1111 1111 1111">
+      <input name = "cvs" type="text" class="checkout-input checkout-cvc" placeholder="CVC">
+    </p>
+    <p>
+      <button type="submit" value="Оплатить" class="checkout-btn">Оплатить</button>
+    </p>
+  </form>
+</html>

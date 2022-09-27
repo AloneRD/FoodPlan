@@ -1,4 +1,3 @@
-from dataclasses import fields
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -59,3 +58,11 @@ class OrderForm(forms.Form):
         widget=forms.CheckboxSelectMultiple(attrs={'class':"form-check-input me-1"}),
         required=False
         )
+
+
+class PayForm(forms.Form):
+    name = forms.CharField(max_length=100, required=True)
+    month = forms.IntegerField(max_value=12, min_value=1)
+    year = forms.IntegerField(max_value=99, min_value=1)
+    cart_number = forms.CharField(max_length=16)
+    cvs = forms.IntegerField(max_value=999, min_value=1)
