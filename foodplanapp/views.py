@@ -139,7 +139,8 @@ def subscription(request):
                 persons=int(person),
                 price=price,
             )
-            order.allergy.set(allergy)
+            if allergy:
+                order.allergy.set(allergy)
             return redirect('pay', order_id=order.id)
 
     else:
