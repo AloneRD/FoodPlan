@@ -50,6 +50,10 @@ class Recipe(models.Model):
 
 
 class Order(models.Model):
+    PAY_STATUS = [
+        ("Оплачен", "Оплачен"),
+        ("Не оплачен", "Не оплачен")
+    ]
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -76,6 +80,12 @@ class Order(models.Model):
         blank=True
     )
     price = models.PositiveIntegerField("Цена подписки", validators=[MinValueValidator(0)])
+    pay_status = models.CharField(
+        "Статус оплаты",
+        max_length=50,
+        choices=PAY_STATUS,
+        default="Не оплачен"
+        )
 
     class Meta:
         verbose_name = "Подписка"
