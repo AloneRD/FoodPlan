@@ -49,6 +49,7 @@ def get_recipe(recipe_type, allergy=None):
 
 
 def get_day_menu(order, allergy=None):
+    print(order)
     day_menu = {}
     day_calories = 0
     if order.breakfast:
@@ -86,19 +87,17 @@ def lk(request):
     orders = Order.objects.filter(user=request.user).select_related('user')
     client_subscriptions = {}
     for order in orders:
+        day_menu, day_calories = get_day_menu(order, order.allergy)
+        client_subscriptions[order] = {
+            'subscription_name': 'Пользовательская',
+            'user_day_menu': day_menu,
+            'day_calories': day_calories,
+            'portions': get_portions(order),
+        }
         if order.allergy:
-            day_menu, day_calories = get_day_menu(order, order.allergy)
-            client_subscriptions[order] = {
-                'subscription_name': 'Пользовательская',
-                'allergy': order.allergy,
-                'user_day_menu': day_menu,
-                'day_calories': day_calories,
-                'portions': get_portions(order),
-            }
+            client_subscriptions[order]['allergy'] = order.allergy
         else:
-            client_subscriptions[order] = {
-                'allergy': 'Нет',
-            }
+            client_subscriptions[order]['allergy'] = 'Нет'
 
     return render(
         request,
