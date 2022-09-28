@@ -204,9 +204,9 @@ def auth(request):
                     login(request, user)
                     return redirect('lk')
                 else:
-                    return HttpResponse('Disabled account')
+                    return render(request, 'auth.html', {'form': form, 'error': 'Аккаунт неактивен'})
             else:
-                return HttpResponse('Invalid login')
+                return render(request, 'auth.html', {'form': form, 'error': 'Неверные данные для входа'})
     else:
         form = UserLoginForm()
     return render(request, 'auth.html', {'form': form})
